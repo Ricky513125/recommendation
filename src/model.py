@@ -45,6 +45,12 @@ class RecommendationModel(pl.LightningModule):
         # 记录特征重要性
         self.feature_importance = None
 
+        # 新增设备设置
+        self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+        self.to(self.device)  # 确保模型在GPU上
+
+        logger.info(f"Model initialized on device: {self.device}")
+
     def _init_embeddings(self):
         """初始化嵌入层"""
         # 用户特征嵌入

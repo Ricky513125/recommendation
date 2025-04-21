@@ -147,7 +147,8 @@ class ModelTrainer:
             num_workers=max(1, self.config['system']['num_workers'] // 2),
             pin_memory=True,
             persistent_workers=True,
-            prefetch_factor=2
+            prefetch_factor=2,
+            generator = torch.Generator(device='cuda')
         )
 
         return train_loader, valid_loader
@@ -155,6 +156,7 @@ class ModelTrainer:
     @memory_optimize  # 现在可以使用这个装饰器了
     def train(self):
         """训练模型"""
+
         try:
             self.monitor_memory_usage()
             

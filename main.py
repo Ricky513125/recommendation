@@ -40,6 +40,12 @@ def cli():
 @timer
 def train(config: str, debug: bool):
     """训练模型"""
+
+    assert torch.cuda.is_available(), "CUDA not available!"
+    logger.info(f"Using GPU: {torch.cuda.get_device_name(0)}")
+    logger.info(f"GPU Memory: {torch.cuda.memory_allocated() / 1024 ** 3:.2f}GB used")
+
+
     # 加载配置
     config = load_config(config)
     if debug:
