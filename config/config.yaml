@@ -54,7 +54,7 @@ features:
 
 device:
   accelerator: 'gpu'
-  devices: [0]  # 修改为列表格式
+  devices: [1]  # 修改为列表格式
   strategy: 'auto'
   precision: 16
 

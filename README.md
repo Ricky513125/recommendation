@@ -2,6 +2,9 @@
 
 基于阿里巴巴移动电商平台的用户行为数据构建的深度学习推荐系统，针对天池竞赛"移动推荐算法"设计。采用深度学习模型对用户行为序列建模，实现个性化推荐。
 
+## 数据集地址
+https://tianchi.aliyun.com/dataset/46?lang=zh-cn
+
 ## 项目特点
 
 - 深度学习模型架构（多塔模型 + Transformer序列编码）
@@ -183,30 +186,3 @@ python3 main.py run-all --gpu
    - 调整学习率
    - 使用梯度裁剪
    - 检查数据预处理
-
-## 作者
-
-綦子宽
-
-## 更新日志
-
-### v0.2.1 (2024-11-12)
-- 迁移到深度学习架构
-- 添加GPU训练支持
-- 优化特征处理流程
-- 增加可视化功能
-
-### v0.1.0 (2024-11-10)
-- 初始版本发布
-- 基本功能实现
-
-## 参考
-
-- [天池移动推荐算法](https://tianchi.aliyun.com/competition/entrance/231522/information)
-- [PyTorch文档](https://pytorch.org/docs/stable/index.html)
-- [PyTorch Lightning文档](https://pytorch-lightning.readthedocs.io/)
-
-## 许可证
-
-MIT License
-```
