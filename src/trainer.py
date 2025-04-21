@@ -73,8 +73,8 @@ class ModelTrainer:
             raise RuntimeError("No GPU available!")
         
         gpu_name = torch.cuda.get_device_name(0)
-        if 'A100' not in gpu_name:
-            logger.warning(f"Expected NVIDIA A100, but found {gpu_name}")
+        # if 'A100' not in gpu_name:
+        #     logger.warning(f"Expected NVIDIA A100, but found {gpu_name}")
         
         gpu_props = torch.cuda.get_device_properties(0)
         total_memory = gpu_props.total_memory / 1024**3
@@ -137,7 +137,8 @@ class ModelTrainer:
             persistent_workers=True,
             prefetch_factor=self.config['system']['prefetch_factor'],
             drop_last=True,
-            generator=torch.Generator(device='cuda')
+            generator=torch.Generator(device='cuda'),
+            device=torch.device('cuda')  # 明确指定GPU
         )
 
         valid_loader = DataLoader(
@@ -148,7 +149,8 @@ class ModelTrainer:
             pin_memory=True,
             persistent_workers=True,
             prefetch_factor=2,
-            generator = torch.Generator(device='cuda')
+            generator = torch.Generator(device='cuda'),
+            device=torch.device('cuda')  # 明确指定GPU
         )
 
         return train_loader, valid_loader

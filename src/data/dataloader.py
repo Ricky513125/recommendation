@@ -11,7 +11,8 @@ class RecommendationDataLoader:
                  batch_size: int,
                  shuffle: bool = True,
                  num_workers: int = 4,
-                 pin_memory: bool = True):
+                 pin_memory: bool = True,
+                 device: torch.device = torch.device('cuda')):  # 新增设备参数):
         """
         初始化数据加载器
         Args:
@@ -24,7 +25,7 @@ class RecommendationDataLoader:
         self.dataset = dataset
         self.batch_size = batch_size
         self.shuffle = shuffle
-        
+        self.device = device  # 保存设备信息
         # 创建DataLoader
         self.dataloader = DataLoader(
             dataset,
@@ -32,7 +33,8 @@ class RecommendationDataLoader:
             shuffle=shuffle,
             num_workers=num_workers,
             pin_memory=pin_memory,
-            collate_fn=self.collate_fn
+            collate_fn=self.collate_fn,
+            generator=torch.Generator(device='cuda')  # 确保随机数生成在GPU上
         )
         
     def collate_fn(self, batch: List[Dict[str, torch.Tensor]]) -> Dict[str, torch.Tensor]:
@@ -43,6 +45,16 @@ class RecommendationDataLoader:
         Returns:
             整理后的批数据
         """
+        """自动将数据转移到GPU的批处理函数"""
+        def to_device(data):
+            if isinstance(data, torch.Tensor):
+                return data.to(self.device, non_blocking=True)  # 异步传输
+            elif isinstance(data, dict):
+                return {k: to_device(v) for k, v in data.items()}
+            elif isinstance(data, (list, tuple)):
+                return type(data)(to_device(x) for x in data)
+            return data
+
         # 收集所有样本的字段
         batch_dict = {
             'user_id': [],
@@ -90,7 +102,7 @@ class RecommendationDataLoader:
         if 'labels' in batch_dict:
             batch_dict['labels'] = torch.stack(batch_dict['labels'])
             
-        return batch_dict
+        return to_device(batch_dict)
     
     def __iter__(self):
         """返回数据加载器迭代器"""
