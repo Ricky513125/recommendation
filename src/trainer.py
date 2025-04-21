@@ -48,6 +48,11 @@ class ModelTrainer:
 
         setup_logging(self.config['logging'])
         self.check_gpu_and_optimize()
+
+        # 新增：强制验证 GPU
+        assert torch.cuda.is_available(), "CUDA not available!"
+        logger.info(f"GPU detected: {torch.cuda.get_device_name(0)}")
+
         self.data_processor = DataProcessor(self.config)
         self.model = DeepRecommender(self.config)
 
