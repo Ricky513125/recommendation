@@ -60,7 +60,8 @@ def train(config: str, debug: bool):
         val_dataset = RecommendationDataset(val_data, config)
 
         # 初始化训练器
-        trainer = DeepModelTrainer(config)
+
+        trainer = ModelTrainer(config)
 
         # 运行训练
         metrics = trainer.train(train_dataset, val_dataset)
@@ -95,7 +96,7 @@ def predict(config: str, test_date: str):
         test_dataset = RecommendationDataset(test_data, config)
 
         # 加载训练好的模型
-        trainer = DeepModelTrainer(config)
+        trainer = ModelTrainer(config)
         trainer.load_checkpoint(Path(config['data']['paths']['checkpoint_dir']) / 'best.ckpt')
 
         # 生成预测
