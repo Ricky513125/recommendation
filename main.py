@@ -166,13 +166,18 @@ def analyze_data(config: str):
 @cli.command()
 @click.option('--config', '-c', default='config/config.yaml', help='配置文件路径')
 @click.option('--debug', is_flag=True, help='是否开启调试模式')
+@click.option('--gpu', is_flag=True, help='强制使用GPU')  # 新增参数
 @timer
-def run_all(config: str, debug: bool):
+def run_all(config: str, debug: bool, gpu: bool):
     """运行完整流程"""
     config_dict = load_config(config)
     if debug:
         config_dict['logging']['level'] = 'DEBUG'
         pl.seed_everything(config_dict['system']['seed'])
+
+    # 新增：根据 --gpu 参数覆盖配置
+    if gpu:
+        config_dict['device']['accelerator'] = 'gpu'
 
     setup_logging(config_dict['logging'])
     logger.info("Starting full pipeline...")
